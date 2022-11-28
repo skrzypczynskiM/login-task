@@ -1,12 +1,4 @@
-export type User = {
-    id: string;
-    fullname: string;
-    password: string;
-    email: string;
-    profession: string;
-    favouritePizza: string;
-    consent: boolean;
-};
+import { User } from '../shared/types';
 
 export type Status = 'idle' | 'pending' | 'succeeded' | 'failed';
 

@@ -5,25 +5,47 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { userActions } from '../../store';
-import { User } from '../../store/types';
 import { history } from '../../utils/history';
+import { PizzaType, Pizza, Sex, User } from '../../shared/types';
+import { editProfileSchema } from '../../validators';
+import { Button } from '../../components/button';
+
+type FormData = {
+    id: string;
+    fullname: string;
+    password: string;
+    email: string;
+    profession: string;
+    favouritePizza: PizzaType;
+    sex: Sex;
+    consent: boolean;
+};
 
 export function EditProfile() {
+    const { token: isAuthenticated, userInfo } = useAppSelector(
+        (store) => store.user
+    );
     const dispatch = useAppDispatch();
-    const { token: isAuthenticated } = useAppSelector((store) => store.user);
 
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<FormData>();
+    } = useForm<FormData>({
+        resolver: yupResolver(editProfileSchema),
+        defaultValues: {
+            ...userInfo,
+        },
+    });
 
-    function onSubmit({ email, password }: any) {
-        return dispatch(userActions.login({ email, password }));
+    console.log('userInfo: ', userInfo?.favouritePizza);
+
+    function onSubmit(userInfo: User) {
+        return dispatch(userActions.editProfile(userInfo));
     }
 
     useEffect(() => {
-        // redirect to home if already logged in
+        // redirect to login page if not logged in
         if (!isAuthenticated) {
             history?.navigate?.('/login');
         }
@@ -35,123 +57,173 @@ export function EditProfile() {
                 <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
                     <div className="text-gray-600">
                         <p className="font-medium text-lg">Personal Details</p>
-                        <p>You can update your profiel data here.</p>
+                        <p>You can update your profile data here.</p>
                     </div>
 
                     <div className="lg:col-span-2">
-                        <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-                            <div className="md:col-span-5">
-                                <label htmlFor="fullname">Full Name</label>
-                                <input
-                                    type="text"
-                                    name="fullname"
-                                    id="firstname"
-                                    className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                                    value=""
-                                    placeholder=""
-                                />
-                            </div>
-
-                            <div className="md:col-span-5">
-                                <label htmlFor="email">Email Address</label>
-                                <input
-                                    type="text"
-                                    name="email"
-                                    id="email"
-                                    className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                                    value=""
-                                    placeholder="email@domain.com"
-                                />
-                            </div>
-
-                            <div className="md:col-span-5">
-                                <label htmlFor="profession">Profession</label>
-                                <input
-                                    type="text"
-                                    name="profession"
-                                    id="profession"
-                                    className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                                    value=""
-                                    placeholder="web developer"
-                                />
-                            </div>
-
-                            <div className="md:col-span-2">
-                                <label htmlFor="pizza">Favourite pizza</label>
-                                <select
-                                    id="pizza"
-                                    className="appearance-none block w-full px-3 py-1.5 text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded m-0
-    "
-                                >
-                                    <option value="1">Margherita</option>
-                                    <option value="2">Pepperoni</option>
-                                    <option value="3">Hawaiian</option>
-                                    <option value="3">Buffalo</option>
-                                </select>
-                            </div>
-
-                            <div className="md:col-span-3">
-                                <label className="block">Sex</label>
-                                <div className="flex space">
-                                    <div className="flex items-center mb-4 mr-6 cursor-pointer">
-                                        <input
-                                            id="sex-option-male"
-                                            type="radio"
-                                            name="sex"
-                                            value="male"
-                                            className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 cursor-pointer"
-                                        />
-                                        <label
-                                            htmlFor="sex-option-male"
-                                            className="text-sm font-medium text-gray-900 ml-2 block"
-                                        >
-                                            Male
-                                        </label>
-                                    </div>
-
-                                    <div className="flex items-center mb-4 mr-6 cursor-pointer">
-                                        <input
-                                            id="sex-option-female"
-                                            type="radio"
-                                            name="sex"
-                                            value="female"
-                                            className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 cursor-pointer"
-                                        />
-                                        <label
-                                            htmlFor="sex-option-female"
-                                            className="text-sm font-medium text-gray-900 ml-2 block"
-                                        >
-                                            Female
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="md:col-span-5">
-                                <label className="inline-flex items-center mt-3">
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+                                <div className="md:col-span-5">
+                                    <label htmlFor="fullname">Full Name</label>
                                     <input
-                                        type="checkbox"
-                                        className="form-checkbox h-5 w-5 text-gray-600"
+                                        {...register('fullname')}
+                                        type="text"
+                                        name="fullname"
+                                        id="fullname"
+                                        className={`${
+                                            errors?.fullname
+                                                ? 'border-red-600'
+                                                : 'border-gray-300 focus:border-blue-600'
+                                        } block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
+                                        placeholder="Fullname"
                                     />
-                                    <span className="ml-2 text-gray-700">
-                                        Agree for data proccessing
-                                    </span>
-                                </label>
-                            </div>
 
-                            <div className="md:col-span-5 text-right">
-                                <div className="inline-flex items-end">
-                                    <button
-                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                        onClick={() =>
-                                            history.navigate?.('/profile')
-                                        }
+                                    <div className="text-red-600 h-4">
+                                        {errors.fullname?.message}
+                                    </div>
+                                </div>
+                                <div className="md:col-span-5">
+                                    <label htmlFor="email">Email Address</label>
+                                    <input
+                                        {...register('email')}
+                                        type="email"
+                                        name="email"
+                                        id="email"
+                                        className={`${
+                                            errors?.email
+                                                ? 'border-red-600'
+                                                : 'border-gray-300 focus:border-blue-600'
+                                        } block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
+                                        placeholder="email@domain.com"
+                                    />
+
+                                    <div className="text-red-600 h-4">
+                                        {errors.email?.message}
+                                    </div>
+                                </div>
+                                <div className="md:col-span-5">
+                                    <label htmlFor="profession">
+                                        Profession
+                                    </label>
+                                    <input
+                                        {...register('profession')}
+                                        type="text"
+                                        name="profession"
+                                        id="profession"
+                                        className={`${
+                                            errors?.profession
+                                                ? 'border-red-600'
+                                                : 'border-gray-300 focus:border-blue-600'
+                                        } block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
+                                        placeholder="web developer"
+                                    />
+
+                                    <div className="text-red-600 h-4">
+                                        {errors.profession?.message}
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label htmlFor="favouritePizza">
+                                        Favourite pizza
+                                    </label>
+                                    <select
+                                        {...register('favouritePizza')}
+                                        id="favouritePizza"
+                                        className="appearance-none block w-full px-3 py-1.5 text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded m-0
+    "
                                     >
-                                        Submit
-                                    </button>
+                                        <option value={Pizza.Margherita}>
+                                            Margherita
+                                        </option>
+                                        <option value={Pizza.Pepperoni}>
+                                            Pepperoni
+                                        </option>
+                                        <option value={Pizza.Hawaiian}>
+                                            Hawaiian
+                                        </option>
+                                        <option value={Pizza.Buffalo}>
+                                            Buffalo
+                                        </option>
+                                    </select>
+
+                                    <div className="text-red-600 h-4">
+                                        {errors.favouritePizza?.message}
+                                    </div>
+                                </div>
+                                <div className="md:col-span-3">
+                                    <label className="block">Sex</label>
+                                    <div className="flex space">
+                                        <div className="flex items-center mb-4 mr-6 cursor-pointer">
+                                            <input
+                                                {...register('sex')}
+                                                id="sex-option-male"
+                                                type="radio"
+                                                name="sex"
+                                                value={Sex.Male}
+                                                className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 cursor-pointer"
+                                            />
+                                            <label
+                                                htmlFor="sex-option-male"
+                                                className="text-sm font-medium text-gray-900 ml-2 block"
+                                            >
+                                                Male
+                                            </label>
+                                        </div>
+
+                                        <div className="flex items-center mb-4 mr-6 cursor-pointer">
+                                            <input
+                                                {...register('sex')}
+                                                id="sex-option-female"
+                                                type="radio"
+                                                name="sex"
+                                                value={Sex.Female}
+                                                className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 cursor-pointer"
+                                            />
+                                            <label
+                                                htmlFor="sex-option-female"
+                                                className="text-sm font-medium text-gray-900 ml-2 block"
+                                            >
+                                                Female
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="text-red-600 h-4">
+                                        {errors.sex?.message}
+                                    </div>
+                                </div>
+                                <div className="md:col-span-5">
+                                    <label className="inline-flex items-center mt-3">
+                                        <input
+                                            {...register('consent')}
+                                            id="consent"
+                                            type="checkbox"
+                                            className="form-checkbox h-5 w-5 text-gray-600"
+                                        />
+                                        <label
+                                            className="ml-2 text-gray-700"
+                                            htmlFor="consent"
+                                        >
+                                            Agree for data proccessing
+                                        </label>
+                                    </label>
+
+                                    <div className="text-red-600 h-4">
+                                        {errors.consent?.message}
+                                    </div>
+                                </div>
+
+                                <div className="md:col-span-5 text-right">
+                                    <div className="inline-flex items-end">
+                                        <Button
+                                            type="submit"
+                                            loading={isSubmitting}
+                                        >
+                                            Save
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -1,18 +1,10 @@
-import { ApiUrls, users, JWT_TOKEN } from '../const';
-import { User } from '../store/types';
+import { API_URLS, USERS, JWT_TOKEN } from '../const';
+import { User } from '../shared/types';
 import { lsSave, lsRead } from '../utils';
 import { RequestOptions } from './types';
 
-// type Res = Promise<{ ok: boolean; text: () => Promise<string> }>;
-
-// Registered users
-lsSave('db_users', users);
-
-// type Responsee = Promise<Response> & {
-//     status?: number;
-//     ok?: boolean;
-//     text: () => Promise<string>;
-// };
+// Load registered users
+lsSave('db_users', USERS);
 
 export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
     return new Promise((resolve, reject) => {
@@ -21,13 +13,13 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
 
         function handleRoute() {
             switch (url) {
-                case ApiUrls.POST.LOGIN:
+                case API_URLS.POST.LOGIN:
                     return authenticate();
 
-                case ApiUrls.GET.USER_PROFILE:
+                case API_URLS.GET.USER_PROFILE:
                     return getUser();
 
-                case ApiUrls.POST.EDIT_PROFILE:
+                case API_URLS.POST.EDIT_PROFILE:
                     return editProfile();
 
                 default:
@@ -48,20 +40,13 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
                 (user) => user.email === email && user.password === password
             );
 
+            console.log('user api : ', user);
             if (!user) {
                 return error(400, 'Username or password is incorrect');
             }
 
             return ok({
-                userInfo: {
-                    id: user.id,
-                    email: user.email,
-                    fullname: user.fullname,
-                    password: user.password,
-                    profession: user.profession,
-                    favouritePizza: user.favouritePizza,
-                    consent: user.consent,
-                },
+                userInfo: { ...user },
                 token: JWT_TOKEN,
             });
         }
@@ -87,6 +72,7 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
         }
 
         function getUser() {
+            console.log('hell');
             if (!isAuthenticated()) {
                 return resolve(error(401, 'Unauthorized'));
             }
@@ -111,8 +97,14 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
         }
 
         function error(status: number, message: string) {
+            console.log('status: ', status);
+
             return {
                 status,
+                // payload: JSON.stringify({ message }),
+                //  new Promise((resolve) =>
+                //     resolve(JSON.stringify({ message }))
+                // ),
                 text: () => Promise.resolve(JSON.stringify({ message })),
             };
         }

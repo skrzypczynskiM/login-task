@@ -12,22 +12,5 @@ export function ProtectedRoute({ children }: Props) {
         return <Navigate to="/login" state={{ from: history.location }} />;
     }
 
-    // authorized so return child components
     return children;
 }
-
-// import React from "react";
-// import { Navigate, useLocation, useNavigate } from "react-router-dom";
-// import { useAppSelector } from "../../state/hooks";
-
-// const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
-//   const {user} = <Your-State-Provider>// Redux/Context or even in-memory user
-//   const location = useLocation();
-//   return !user.isAuthenticated ? (
-//     <Navigate to={"/login"} state={{ from: location }} replace />
-//   ) : (
-//     children
-//   );
-// };
-
-// export default ProtectedRoute;

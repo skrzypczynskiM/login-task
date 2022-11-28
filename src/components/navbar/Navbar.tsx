@@ -14,11 +14,10 @@ export function Navbar() {
                 <li className="px-5 py-2">
                     <NavLink to="/edit-profile">Edit Profile</NavLink>
                 </li>
-                <li
-                    className="ml-auto px-5 py-2"
-                    onClick={() => dispatch(userActions.logout())}
-                >
-                    Logout
+                <li className="ml-auto px-5 py-2 ">
+                    <button onClick={() => dispatch(userActions.logout())}>
+                        Logout
+                    </button>
                 </li>
             </ul>
         </nav>

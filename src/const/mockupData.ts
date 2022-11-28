@@ -1,13 +1,14 @@
-import { User } from '../store/types';
+import { Pizza, Sex, User } from '../shared/types';
 
-export const users: User[] = [
+export const USERS: User[] = [
     {
         id: '1',
         fullname: 'Joseph Joestar',
         password: 'test',
-        email: 'test',
+        email: 'test@example.com',
         profession: 'web developer',
-        favouritePizza: 'Margerita',
+        favouritePizza: Pizza.Buffalo,
+        sex: Sex.Male,
         consent: false,
     },
 
@@ -17,7 +18,8 @@ export const users: User[] = [
         password: 'abcde',
         email: 'Ralph@gmail.com',
         profession: 'professional room cleaner',
-        favouritePizza: 'Margerita',
+        favouritePizza: Pizza.Margherita,
+        sex: Sex.Male,
         consent: true,
     },
 
@@ -27,7 +29,8 @@ export const users: User[] = [
         password: 'efghij',
         email: 'Byczek@gmail.com',
         profession: 'professional broom rider',
-        favouritePizza: 'Margerita',
+        favouritePizza: Pizza.Hawaiian,
+        sex: Sex.Female,
         consent: true,
     },
 ];

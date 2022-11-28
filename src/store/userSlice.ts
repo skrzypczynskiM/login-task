@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchWrapper } from '../api/fetch-wrapper';
-import { ApiUrls } from '../const';
-import { LoginRequest, LoginResponse, Status, User } from './types';
+import { API_URLS } from '../const';
+import { LoginRequest, LoginResponse, Status } from './types';
 import { history, lsDelete, lsRead, lsSave } from '../utils';
+import { User } from '../shared/types';
 
 type UserState = {
     userInfo: User | null;
@@ -15,7 +16,7 @@ const name = 'user';
 
 function createInitialState(): UserState {
     const { userInfo, token } = lsRead<Pick<UserState, 'userInfo' | 'token'>>(
-        'userInfo',
+        'user',
         {
             userInfo: null,
             token: null,
@@ -33,19 +34,19 @@ function createInitialState(): UserState {
 
 const getUser = createAsyncThunk(
     `${name}/getUser`,
-    async () => await fetchWrapper.get(ApiUrls.GET.USER_PROFILE)
+    async () => await fetchWrapper.get(API_URLS.GET.USER_PROFILE)
 );
 
 const editProfile = createAsyncThunk(
     `${name}/edit-profile`,
     async (user: User) =>
-        await fetchWrapper.post(ApiUrls.POST.EDIT_PROFILE, user)
+        await fetchWrapper.post(API_URLS.POST.EDIT_PROFILE, user)
 );
 
 const login = createAsyncThunk(
     `${name}/login`,
     async ({ email, password }: LoginRequest) =>
-        await fetchWrapper.post(ApiUrls.POST.LOGIN, {
+        await fetchWrapper.post(API_URLS.POST.LOGIN, {
             email,
             password,
         })
@@ -59,7 +60,7 @@ const userSlice = createSlice({
             state.userInfo = null;
             state.token = null;
 
-            lsDelete('userInfo');
+            lsDelete('user');
             history.navigate?.('/login');
         },
     },
@@ -74,7 +75,7 @@ const userSlice = createSlice({
                 state.token = token;
 
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
-                lsSave('userInfo', action.payload);
+                lsSave('user', action.payload);
 
                 state.userInfo = userInfo;
 
@@ -87,6 +88,7 @@ const userSlice = createSlice({
         );
 
         builder.addCase(login.rejected, (state, action) => {
+            console.log('action: ', action);
             state.loading = 'failed';
             state.error = action.error;
         });
@@ -121,6 +123,12 @@ const userSlice = createSlice({
                 state.userInfo = action.payload;
                 state.loading = 'succeeded';
                 state.error = null;
+
+                lsSave('user', {
+                    userInfo: action.payload,
+                    token: state.token,
+                });
+                history.navigate?.('/profile');
             }
         );
 

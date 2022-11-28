@@ -1,8 +1,24 @@
-// export enum Pizza {
-//     Margherita = 1,
-//     Pepperoni = 2,
-//     Hawaiian = 3,
-//     Buffalo = 4,
-// }
+export type User = {
+    id: string;
+    fullname: string;
+    password: string;
+    email: string;
+    profession: string;
+    favouritePizza: PizzaType;
+    sex: Sex;
+    consent: boolean;
+};
 
-export type Pizza = 'Margherita' | 'Pepperoni' | 'Hawaiian' | 'Buffalo';
+export enum Pizza {
+    Margherita = 'Margherita',
+    Pepperoni = 'Pepperoni',
+    Hawaiian = 'Hawaiian',
+    Buffalo = 'Buffalo',
+}
+
+export enum Sex {
+    Male = 'Male',
+    Female = 'Female',
+}
+
+export type PizzaType = 'Margherita' | 'Pepperoni' | 'Hawaiian' | 'Buffalo';

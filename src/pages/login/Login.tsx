@@ -6,6 +6,10 @@ import { userActions } from '../../store';
 import { LoginRequest } from '../../store/types';
 import { history } from '../../utils';
 import { loginSchema } from '../../validators';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Alert } from '../../components/alert';
+import { Button } from '../../components/button';
 
 type FormData = {
     email: string;
@@ -13,8 +17,12 @@ type FormData = {
 };
 
 export function Login() {
+    const { token: isAuthenticated, error: authError } = useAppSelector(
+        (store) => store.user
+    );
     const dispatch = useAppDispatch();
-    const { token: isAuthenticated } = useAppSelector((store) => store.user);
+
+    console.log('isAuthenticated: ', isAuthenticated);
 
     const {
         register,
@@ -27,21 +35,42 @@ export function Login() {
     }
 
     useEffect(() => {
-        // redirect to home if already logged in
         if (isAuthenticated) {
             history?.navigate?.('/profile');
         }
     }, [isAuthenticated]);
 
+    useEffect(() => {
+        if (authError) {
+            toast.error(authError, {
+                position: 'top-right',
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+        }
+    }, [authError]);
+
     return (
-        <section className="h-screen">
+        <section className="h-screen ">
             <div className="container px-6 py-12 h-full">
+                <Alert className="w-80 fixed top-10 right-10">
+                    <div>
+                        <div className="font-bold">email: test@example.com</div>
+
+                        <div className="font-bold">password: test</div>
+                    </div>
+                </Alert>
                 <div className="flex justify-center items-center flex-wrap h-full g-6 text-gray-800">
                     <div className="md:w-8/12 lg:w-6/12 mb-12 md:mb-0">
                         <img
                             src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
                             className="w-full"
-                            alt="Phoner"
+                            alt="woman with doors"
                         />
                     </div>
                     <div className="md:w-8/12 lg:w-5/12 lg:ml-20">
@@ -52,10 +81,14 @@ export function Login() {
                                     {...register('email')}
                                     type="email"
                                     name="email"
-                                    className="block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                    className={`${
+                                        errors?.email
+                                            ? 'border-red-600'
+                                            : 'border-gray-300 focus:border-blue-600'
+                                    } block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
                                     placeholder="Email address"
                                 />
-                                <div className="invalid-feedback">
+                                <div className="text-red-600 h-4">
                                     {errors.email?.message}
                                 </div>
                             </div>
@@ -65,25 +98,26 @@ export function Login() {
                                     {...register('password')}
                                     name="password"
                                     type="password"
-                                    className="block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                    className={`${
+                                        errors?.password
+                                            ? 'border-red-600'
+                                            : 'border-gray-300 focus:border-blue-600 '
+                                    } block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
                                     placeholder="Password"
                                 />
-                                <div className="invalid-feedback">
+                                <div className="text-red-600 h-4">
                                     {errors.password?.message}
                                 </div>
                             </div>
 
-                            <button
-                                type="submit"
-                                className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
-                                disabled={isSubmitting}
-                            >
+                            <Button type="submit" loading={isSubmitting}>
                                 Sign in
-                            </button>
+                            </Button>
                         </form>
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </section>
     );
 }
