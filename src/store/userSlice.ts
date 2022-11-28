@@ -1,16 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchWrapper } from '../api/fetch-wrapper';
 import { API_URLS } from '../const';
-import { LoginRequest, LoginResponse, Status } from './types';
+import { LoginRequest, LoginResponse, UserState } from './types';
 import { history, lsDelete, lsRead, lsSave } from '../utils';
 import { User } from '../shared/types';
-
-type UserState = {
-    userInfo: User | null;
-    loading: Status;
-    error: any;
-    token: string | null;
-};
 
 const name = 'user';
 
@@ -23,8 +16,8 @@ function createInitialState(): UserState {
         }
     );
 
+    // initialize state from local storage to enable user to stay logged in
     return {
-        // initialize state from local storage to enable user to stay logged in
         userInfo,
         token,
         loading: 'idle',
@@ -59,7 +52,6 @@ const userSlice = createSlice({
         logout: (state) => {
             state.userInfo = null;
             state.token = null;
-
             lsDelete('user');
             history.navigate?.('/login');
         },
@@ -76,7 +68,6 @@ const userSlice = createSlice({
 
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 lsSave('user', action.payload);
-
                 state.userInfo = userInfo;
 
                 // get return url from location state or default to home page
@@ -88,7 +79,6 @@ const userSlice = createSlice({
         );
 
         builder.addCase(login.rejected, (state, action) => {
-            console.log('action: ', action);
             state.loading = 'failed';
             state.error = action.error;
         });

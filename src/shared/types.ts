@@ -21,4 +21,8 @@ export enum Sex {
     Female = 'Female',
 }
 
-export type PizzaType = 'Margherita' | 'Pepperoni' | 'Hawaiian' | 'Buffalo';
+export type PizzaType =
+    | Pizza.Margherita
+    | Pizza.Pepperoni
+    | Pizza.Hawaiian
+    | Pizza.Buffalo;

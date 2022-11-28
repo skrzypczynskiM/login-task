@@ -22,8 +22,6 @@ export function Login() {
     );
     const dispatch = useAppDispatch();
 
-    console.log('isAuthenticated: ', isAuthenticated);
-
     const {
         register,
         handleSubmit,
@@ -42,8 +40,8 @@ export function Login() {
 
     useEffect(() => {
         if (authError) {
-            toast.error(authError, {
-                position: 'top-right',
+            toast.error(authError.message, {
+                position: 'bottom-left',
                 autoClose: 10000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -79,7 +77,6 @@ export function Login() {
                             <div className="mb-6">
                                 <input
                                     {...register('email')}
-                                    type="email"
                                     name="email"
                                     className={`${
                                         errors?.email

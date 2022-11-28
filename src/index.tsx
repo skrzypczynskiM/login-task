@@ -5,13 +5,10 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
-// import { fetchWithBackend } from './utils';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
-
-// fetchWithBackend();
 
 root.render(
     <React.StrictMode>

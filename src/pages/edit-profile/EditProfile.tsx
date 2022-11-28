@@ -38,8 +38,6 @@ export function EditProfile() {
         },
     });
 
-    console.log('userInfo: ', userInfo?.favouritePizza);
-
     function onSubmit(userInfo: User) {
         return dispatch(userActions.editProfile(userInfo));
     }
@@ -55,7 +53,7 @@ export function EditProfile() {
         <div className="container max-w-screen-lg mx-auto mt-20">
             <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
                 <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
-                    <div className="text-gray-600">
+                    <div className="text-gray-600 mb-7">
                         <p className="font-medium text-lg">Personal Details</p>
                         <p>You can update your profile data here.</p>
                     </div>
@@ -74,11 +72,11 @@ export function EditProfile() {
                                             errors?.fullname
                                                 ? 'border-red-600'
                                                 : 'border-gray-300 focus:border-blue-600'
-                                        } block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
-                                        placeholder="Fullname"
+                                        } block my-2 w-full px-4 py-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
+                                        placeholder="Full Name"
                                     />
 
-                                    <div className="text-red-600 h-4">
+                                    <div className="text-red-600 h-3">
                                         {errors.fullname?.message}
                                     </div>
                                 </div>
@@ -93,11 +91,11 @@ export function EditProfile() {
                                             errors?.email
                                                 ? 'border-red-600'
                                                 : 'border-gray-300 focus:border-blue-600'
-                                        } block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
+                                        } block my-2 w-full px-4 py-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
                                         placeholder="email@domain.com"
                                     />
 
-                                    <div className="text-red-600 h-4">
+                                    <div className="text-red-600 h-3">
                                         {errors.email?.message}
                                     </div>
                                 </div>
@@ -114,8 +112,8 @@ export function EditProfile() {
                                             errors?.profession
                                                 ? 'border-red-600'
                                                 : 'border-gray-300 focus:border-blue-600'
-                                        } block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
-                                        placeholder="web developer"
+                                        } block my-2 w-full px-4 py-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
+                                        placeholder="Web developer"
                                     />
 
                                     <div className="text-red-600 h-4">
@@ -129,8 +127,11 @@ export function EditProfile() {
                                     <select
                                         {...register('favouritePizza')}
                                         id="favouritePizza"
-                                        className="appearance-none block w-full px-3 py-1.5 text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded m-0
-    "
+                                        className={`${
+                                            errors?.fullname
+                                                ? 'border-red-600'
+                                                : 'border-gray-300 focus:border-blue-600'
+                                        } block my-2 w-full px-4 py-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
                                     >
                                         <option value={Pizza.Margherita}>
                                             Margherita
@@ -150,8 +151,10 @@ export function EditProfile() {
                                         {errors.favouritePizza?.message}
                                     </div>
                                 </div>
-                                <div className="md:col-span-3">
-                                    <label className="block">Sex</label>
+                                <div className="md:col-span-3 md:ml-10">
+                                    <label className="block  mt-2 mb-2">
+                                        Sex
+                                    </label>
                                     <div className="flex space">
                                         <div className="flex items-center mb-4 mr-6 cursor-pointer">
                                             <input
@@ -160,7 +163,7 @@ export function EditProfile() {
                                                 type="radio"
                                                 name="sex"
                                                 value={Sex.Male}
-                                                className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 cursor-pointer"
+                                                className="h-3 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 cursor-pointer"
                                             />
                                             <label
                                                 htmlFor="sex-option-male"
@@ -177,7 +180,7 @@ export function EditProfile() {
                                                 type="radio"
                                                 name="sex"
                                                 value={Sex.Female}
-                                                className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 cursor-pointer"
+                                                className="h-3 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 cursor-pointer"
                                             />
                                             <label
                                                 htmlFor="sex-option-female"
@@ -187,7 +190,7 @@ export function EditProfile() {
                                             </label>
                                         </div>
                                     </div>
-                                    <div className="text-red-600 h-4">
+                                    <div className="text-red-600 h-3">
                                         {errors.sex?.message}
                                     </div>
                                 </div>
@@ -207,7 +210,7 @@ export function EditProfile() {
                                         </label>
                                     </label>
 
-                                    <div className="text-red-600 h-4">
+                                    <div className="text-red-600 h-3">
                                         {errors.consent?.message}
                                     </div>
                                 </div>
@@ -217,6 +220,7 @@ export function EditProfile() {
                                         <Button
                                             type="submit"
                                             loading={isSubmitting}
+                                            className="w-32"
                                         >
                                             Save
                                         </Button>

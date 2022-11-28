@@ -3,9 +3,6 @@ import { User } from '../shared/types';
 import { lsSave, lsRead } from '../utils';
 import { RequestOptions } from './types';
 
-// Load registered users
-lsSave('db_users', USERS);
-
 export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
     return new Promise((resolve, reject) => {
         // wrap in timeout to simulate server api call
@@ -40,7 +37,6 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
                 (user) => user.email === email && user.password === password
             );
 
-            console.log('user api : ', user);
             if (!user) {
                 return error(400, 'Username or password is incorrect');
             }
@@ -72,7 +68,6 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
         }
 
         function getUser() {
-            console.log('hell');
             if (!isAuthenticated()) {
                 return resolve(error(401, 'Unauthorized'));
             }
@@ -97,16 +92,10 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
         }
 
         function error(status: number, message: string) {
-            console.log('status: ', status);
-
-            return {
+            resolve({
                 status,
-                // payload: JSON.stringify({ message }),
-                //  new Promise((resolve) =>
-                //     resolve(JSON.stringify({ message }))
-                // ),
                 text: () => Promise.resolve(JSON.stringify({ message })),
-            };
+            });
         }
 
         function isAuthenticated(): boolean {

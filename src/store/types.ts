@@ -18,3 +18,10 @@ export type LoginResponse = {
 };
 
 export type EditProfileRequest = Partial<User>;
+
+export type UserState = {
+    userInfo: User | null;
+    loading: Status;
+    error: any;
+    token: string | null;
+};

@@ -8,9 +8,12 @@ import {
 import { Login } from './pages/login';
 import { Profile } from './pages/profile';
 import { EditProfile } from './pages/edit-profile';
-import { history } from './utils';
 import { ProtectedRoute } from './components/protectedRoute';
 import { Layout } from './components/layout';
+import { history, setupMockupData } from './utils';
+
+// save "registered" users in local storage
+setupMockupData();
 
 function App() {
     history.navigate = useNavigate();
@@ -42,8 +45,6 @@ function App() {
                 <Route path="*" element={<Navigate to="/" />} />
             </Route>
         </Routes>
-        //     </div>
-        // </div>
     );
 }
 

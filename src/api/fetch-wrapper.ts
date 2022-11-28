@@ -35,29 +35,8 @@ function authToken(): string | null {
     return store.getState().user.token;
 }
 
-// function handleResponse(response: Response) {
-//     console.log('response: ', response);
-//     return response.text().then((text) => {
-//         const dataFromAPi = text && JSON.parse(text);
-
-//         if (!response.ok) {
-//             if ([401, 403].includes(response.status) && authToken()) {
-//                 // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-//                 store.dispatch(userActions.logout());
-//             }
-
-//             const error =
-//                 (dataFromAPi && dataFromAPi.message) || response.statusText;
-//             return Promise.reject(error);
-//         }
-
-//         return dataFromAPi;
-//     });
-// }
-
 async function handleResponse(response: Response) {
     console.log('response: ', response);
-    // return response.text().then((text) => {
     return await response.text().then((text) => {
         const dataFromAPi = text && JSON.parse(text);
 
