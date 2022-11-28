@@ -1,4 +1,4 @@
-# Project Title
+# React Authentication App (TS + RTK + React-Hook-Form + Tailwind)
 
 Simple login application with React 18, Redux and the Redux Toolkit that uses JWT authentication.
 
@@ -13,24 +13,27 @@ In this project, 3 simple pages were implemented:
 ### Login Page:
 
 -   The login page contains two form fields, that is, email and password. When the user presses the "submit" button, the application sends a request to an artificial server that has been created for this task. With a positive response, the user will receive a JWT. If incorrect data is entered, the fake backend will return an error, which will appear as notification in the top.
-    ![Login page](/assets/login-page.PNG)
+
+    ![Login page](assets/login-page.PNG)
 
 ### User profile page:
 
 -   Upon successful login, the user is transfered to a secure route where thetheir data is displayed. From this page, the user can go to the next page.
-    ![Profile page](/assets/profile-page.PNG)
+
+    ![Profile page](assets/profile-page.PNG)
 
 ### Edit-Profile page:
 
 -   A page with a form to update the user's data.
     Here you will find a form with 3 different types of inputs, of which there are 6 in total. After successfully updating the data, the user is automatically redirected to Profile Page.
-    ![Edit-profile page](/assets/edit-profile.PNG)
+    
+    ![Edit-profile page](assets/edit-profile.PNG)
 
 ### Backend simulation
 
 -   A fetcher-wrapper and ApiService were implemented for the task. These are intended to accurately reflect the operation of the real backend. LocalStorage was used as the database. The token and user data are also stored in localStorage. This is due to the need to maintain the application state when refreshing the page.
 
-#### Others
+#### Other
 
 Each form is scrupulously validated using the YUP library, while the state of the forms is managed using the React-Hooks-Form library.
 
