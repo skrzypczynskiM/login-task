@@ -14,20 +14,20 @@ In this project, 3 simple pages were implemented:
 
 -   The login page contains two form fields, that is, email and password. When the user presses the "submit" button, the application sends a request to an artificial server that has been created for this task. With a positive response, the user will receive a JWT. If incorrect data is entered, the fake backend will return an error, which will appear as notification in the top.
 
-    ![Login page](assets/login-page.PNG)
+    ![login-page](https://user-images.githubusercontent.com/45791051/204315017-4bb907d8-5e4e-49b9-82c2-9cb046fcbe39.PNG)
 
 ### User profile page:
 
 -   Upon successful login, the user is transfered to a secure route where thetheir data is displayed. From this page, the user can go to the next page.
 
-    ![Profile page](assets/profile-page.PNG)
+    ![profile-page](https://user-images.githubusercontent.com/45791051/204315000-99d8abd9-c9aa-4338-867c-4009c7ea35fb.PNG)
 
 ### Edit-Profile page:
 
 -   A page with a form to update the user's data.
     Here you will find a form with 3 different types of inputs, of which there are 6 in total. After successfully updating the data, the user is automatically redirected to Profile Page.
     
-    ![Edit-profile page](assets/edit-profile.PNG)
+    ![edit-profile](https://user-images.githubusercontent.com/45791051/204315033-ec3878ae-6d76-4fa9-9f0f-6e0b34b9bc23.PNG)
 
 ### Backend simulation
 
