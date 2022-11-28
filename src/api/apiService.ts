@@ -1,18 +1,18 @@
-import { ApiUrls, users } from '../const';
+import { ApiUrls, users, JWT_TOKEN } from '../const';
 import { User } from '../store/types';
 import { lsSave, lsRead } from '../utils';
 import { RequestOptions } from './types';
 
-type Res = Promise<{ ok: boolean; text: () => Promise<string> }>;
+// type Res = Promise<{ ok: boolean; text: () => Promise<string> }>;
 
 // Registered users
 lsSave('db_users', users);
 
-type Responsee = Promise<Response> & {
-    status?: number;
-    ok?: boolean;
-    text: () => Promise<string>;
-};
+// type Responsee = Promise<Response> & {
+//     status?: number;
+//     ok?: boolean;
+//     text: () => Promise<string>;
+// };
 
 export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
     return new Promise((resolve, reject) => {
@@ -62,7 +62,7 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
                     favouritePizza: user.favouritePizza,
                     consent: user.consent,
                 },
-                token: 'fake-jwt-token',
+                token: JWT_TOKEN,
             });
         }
 
@@ -118,7 +118,7 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
         }
 
         function isAuthenticated(): boolean {
-            return opts?.headers['Authorization'] === 'Bearer fake-jwt-token';
+            return opts?.headers['Authorization'] === `Bearer ${JWT_TOKEN}`;
         }
 
         function body() {

@@ -31,3 +31,5 @@ export const users: User[] = [
         consent: true,
     },
 ];
+
+export const JWT_TOKEN = 'some-random-jwt-token';

@@ -1,10 +1,33 @@
-import { useAppDispatch } from '../../hooks';
+import { useEffect } from 'react';
+
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { userActions } from '../../store';
 import { User } from '../../store/types';
 import { history } from '../../utils/history';
 
 export function EditProfile() {
     const dispatch = useAppDispatch();
+    const { token: isAuthenticated } = useAppSelector((store) => store.user);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<FormData>();
+
+    function onSubmit({ email, password }: any) {
+        return dispatch(userActions.login({ email, password }));
+    }
+
+    useEffect(() => {
+        // redirect to home if already logged in
+        if (!isAuthenticated) {
+            history?.navigate?.('/login');
+        }
+    }, [isAuthenticated]);
 
     return (
         <div className="container max-w-screen-lg mx-auto mt-20">
