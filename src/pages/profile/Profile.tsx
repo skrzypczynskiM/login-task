@@ -16,7 +16,7 @@ export function Profile() {
     }, [isAuthenticated]);
 
     return (
-        <div className="max-w-xs md:min-w-[350px] mt-20">
+        <div className="max-w-xs md:min-w-[360px] mt-20">
             <div className="bg-white shadow-xl rounded-lg py-3">
                 <div className="photo-wrapper p-2">
                     <img
@@ -26,13 +26,13 @@ export function Profile() {
                     />
                 </div>
                 <div className="p-2">
-                    <h3 className="text-center text-xl text-gray-900 font-medium leading-8">
+                    <h3 className="text-center text-2xl text-gray-900 font-medium leading-8">
                         {userInfo?.fullname ?? '---'}
                     </h3>
-                    <div className="text-center text-gray-400 text-xs font-semibold">
+                    <div className="text-center text-gray-400 text-sm font-semibold">
                         <p>{userInfo?.profession ?? '---'}</p>
                     </div>
-                    <table className="text-xs my-3 ">
+                    <table className="text-sm my-3 ">
                         <tbody>
                             <tr>
                                 <td className="px-2 py-2 text-gray-500 font-semibold">

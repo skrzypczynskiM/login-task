@@ -1,46 +1,65 @@
-# Getting Started with Create React App
+# Project Title
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Simple login application with React 18, Redux and the Redux Toolkit that uses JWT authentication.
 
-## Available Scripts
+## Description
 
-In the project directory, you can run:
+In this project, 3 simple pages were implemented:
 
-### `npm start`
+-   a login page,
+-   a page to display user data,
+-   a page to update user data.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Login Page:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+-   The login page contains two form fields, that is, email and password. When the user presses the "submit" button, the application sends a request to an artificial server that has been created for this task. With a positive response, the user will receive a JWT. If incorrect data is entered, the fake backend will return an error, which will appear as notification in the top.
+    ![Login page](/assets/login-page.PNG)
 
-### `npm test`
+### User profile page:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-   Upon successful login, the user is transfered to a secure route where thetheir data is displayed. From this page, the user can go to the next page.
+    ![Profile page](/assets/profile-page.PNG)
 
-### `npm run build`
+### Edit-Profile page:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+-   A page with a form to update the user's data.
+    Here you will find a form with 3 different types of inputs, of which there are 6 in total. After successfully updating the data, the user is automatically redirected to Profile Page.
+    ![Edit-profile page](/assets/edit-profile.PNG)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Backend simulation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+-   A fetcher-wrapper and ApiService were implemented for the task. These are intended to accurately reflect the operation of the real backend. LocalStorage was used as the database. The token and user data are also stored in localStorage. This is due to the need to maintain the application state when refreshing the page.
 
-### `npm run eject`
+#### Others
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Each form is scrupulously validated using the YUP library, while the state of the forms is managed using the React-Hooks-Form library.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Application state management is done using the Redux-Tool-Kit library. This library allows the creation of well-scalable and readable code, which prompted me to use it. For the purposes of this small application, only one redux slice is implemented: usersSlice.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Installation
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Clone this repository and install dependencies inside project directory.
 
-## Learn More
+```
+git clone https://github.com/skrzypczynskiM/login-task
+cd login-task
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Usage
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+To run this project in development mode use:
+
+```
+npm run start
+```
+
+### Technological stack
+
+-   React 18.2.0
+-   TypeScript 4.9.3
+-   Redux-Tool-Kit: 1.9.0
+-   Tailwind
+-   React-Hooks-Form 7.39.6
+-   YUP 0.32.11
+-   React-Router 6.4.3

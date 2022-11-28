@@ -16,9 +16,7 @@ type FormData = {
 };
 
 export function Login() {
-    const { token: isAuthenticated, error: authError } = useAppSelector(
-        (store) => store.user
-    );
+    const { error: authError } = useAppSelector((store) => store.user);
     const dispatch = useAppDispatch();
 
     const {
@@ -38,13 +36,6 @@ export function Login() {
             password: 'test',
         });
     }
-
-    useEffect(() => {
-        //logout automatically when user access logout page
-        if (isAuthenticated) {
-            dispatch(userActions.logout());
-        }
-    }, [isAuthenticated, dispatch]);
 
     useEffect(() => {
         if (authError) {
