@@ -1,4 +1,4 @@
-import { API_URLS, USERS, JWT_TOKEN } from '../const';
+import { API_URLS, JWT_TOKEN } from '../const';
 import { User } from '../shared/types';
 import { lsSave, lsRead } from '../utils';
 import { RequestOptions } from './types';

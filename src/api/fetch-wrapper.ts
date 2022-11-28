@@ -42,7 +42,6 @@ async function handleResponse(response: Response) {
 
         if (!response.ok) {
             if ([401, 403].includes(response.status) && authToken()) {
-                // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
                 store.dispatch(userActions.logout());
             }
 
