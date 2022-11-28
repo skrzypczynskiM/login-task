@@ -79,14 +79,14 @@ export function Profile() {
                         </tbody>
                     </table>
 
-                    <button className="text-center my-3">
+                    <div className="text-center my-3">
                         <NavLink
                             to="/edit-profile"
-                            className="text-xs text-indigo-500 italic hover:underline hover:text-indigo-600 font-medium"
+                            className="text-blue-700 italic hover:underline hover:text-indigo-600 font-medium mx-auto text-base"
                         >
                             Edit Profile
                         </NavLink>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>

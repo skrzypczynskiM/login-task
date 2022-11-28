@@ -4,7 +4,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { userActions } from '../../store';
 import { LoginRequest } from '../../store/types';
-import { history } from '../../utils';
 import { loginSchema } from '../../validators';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,6 +24,7 @@ export function Login() {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isSubmitting },
     } = useForm<FormData>({ resolver: yupResolver(loginSchema) });
 
@@ -32,11 +32,19 @@ export function Login() {
         return dispatch(userActions.login({ email, password }));
     }
 
+    function guidePanelHandler() {
+        reset({
+            email: 'test@example.com',
+            password: 'test',
+        });
+    }
+
     useEffect(() => {
+        //logout automatically when user access logout page
         if (isAuthenticated) {
-            history?.navigate?.('/profile');
+            dispatch(userActions.logout());
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, dispatch]);
 
     useEffect(() => {
         if (authError) {
@@ -58,6 +66,12 @@ export function Login() {
             <div className="container px-6 py-12 h-full">
                 <Alert className="w-80 fixed top-10 right-10">
                     <div>
+                        <button
+                            className="text-xs w-10 font-bold absolute top-2 right-2 leading-3"
+                            onClick={guidePanelHandler}
+                        >
+                            Click me
+                        </button>
                         <div className="font-bold">email: test@example.com</div>
 
                         <div className="font-bold">password: test</div>
@@ -99,7 +113,7 @@ export function Login() {
                                         errors?.password
                                             ? 'border-red-600'
                                             : 'border-gray-300 focus:border-blue-600 '
-                                    } block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
+                                    } block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none`}
                                     placeholder="Password"
                                 />
                                 <div className="text-red-600 h-4">
