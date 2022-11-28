@@ -1,94 +1,101 @@
-import { useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useAppSelector } from '../../hooks';
-import { history } from '../../utils/history';
+import { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { useAppSelector } from "../../hooks";
+import { history } from "../../utils/history";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function Profile() {
-    const { token: isAuthenticated, userInfo } = useAppSelector(
-        (store) => store.user
-    );
+  const {
+    token: isAuthenticated,
+    userInfo,
+    loading,
+  } = useAppSelector((store) => store.user);
 
-    useEffect(() => {
-        // redirect to login page if not logged in
-        if (!isAuthenticated) {
-            history?.navigate?.('/login');
-        }
-    }, [isAuthenticated]);
+  useEffect(() => {
+    // redirect to login page if not logged in
+    if (!isAuthenticated) {
+      history?.navigate?.("/login");
+    }
+  }, [isAuthenticated]);
 
-    return (
-        <div className="max-w-xs md:min-w-[360px] mt-20">
-            <div className="bg-white shadow-xl rounded-lg py-3">
-                <div className="photo-wrapper p-2">
-                    <img
-                        className="w-32 h-32 rounded-full mx-auto"
-                        src="https://images.pexels.com/photos/4588001/pexels-photo-4588001.jpeg"
-                        alt="cool doggo"
-                    />
-                </div>
-                <div className="p-2">
-                    <h3 className="text-center text-2xl text-gray-900 font-medium leading-8">
-                        {userInfo?.fullname ?? '---'}
-                    </h3>
-                    <div className="text-center text-gray-400 text-sm font-semibold">
-                        <p>{userInfo?.profession ?? '---'}</p>
-                    </div>
-                    <table className="text-sm my-3 ">
-                        <tbody>
-                            <tr>
-                                <td className="px-2 py-2 text-gray-500 font-semibold">
-                                    Email
-                                </td>
-                                <td className="px-2 py-2">
-                                    {' '}
-                                    {userInfo?.email ?? '---'}
-                                </td>
-                            </tr>
+  useEffect(() => {
+    console.log("cjuk");
+    // if (loading === "succeeded") {
+    //   toast.success(" Data updated successfully!", {
+    //     position: "top-right",
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "light",
+    //   });
+    // }
+  }, [loading]);
 
-                            <tr>
-                                <td className="px-2 py-2 text-gray-500 font-semibold">
-                                    Sex
-                                </td>
-                                <td className="px-2 py-2">
-                                    {' '}
-                                    {userInfo?.sex ?? '---'}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td className="px-2 py-2 text-gray-500 font-semibold">
-                                    Favourite pizza
-                                </td>
-                                <td className="px-2 py-2">
-                                    {' '}
-                                    {userInfo?.favouritePizza ?? '---'}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td className="px-2 py-2 text-gray-500 font-semibold">
-                                    Data processing
-                                </td>
-                                <td className="px-2 py-2">
-                                    {userInfo?.consent ? (
-                                        <>&#9989;</>
-                                    ) : (
-                                        <>&#128308;</>
-                                    )}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div className="text-center my-3">
-                        <NavLink
-                            to="/edit-profile"
-                            className="text-blue-700 italic hover:underline hover:text-indigo-600 font-medium mx-auto text-base"
-                        >
-                            Edit Profile
-                        </NavLink>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="max-w-xs md:min-w-[360px] mt-20">
+      <div className="bg-white shadow-xl rounded-lg py-3">
+        <div className="photo-wrapper p-2">
+          <img
+            className="w-32 h-32 rounded-full mx-auto"
+            src="https://images.pexels.com/photos/4588001/pexels-photo-4588001.jpeg"
+            alt="cool doggo"
+          />
         </div>
-    );
+        <div className="p-2">
+          <h3 className="text-center text-2xl text-gray-900 font-medium leading-8">
+            {userInfo?.fullname ?? "---"}
+          </h3>
+          <div className="text-center text-gray-400 text-sm font-semibold">
+            <p>{userInfo?.profession ?? "---"}</p>
+          </div>
+          <table className="text-sm my-3 ">
+            <tbody>
+              <tr>
+                <td className="px-2 py-2 text-gray-500 font-semibold">Email</td>
+                <td className="px-2 py-2"> {userInfo?.email ?? "---"}</td>
+              </tr>
+
+              <tr>
+                <td className="px-2 py-2 text-gray-500 font-semibold">Sex</td>
+                <td className="px-2 py-2"> {userInfo?.sex ?? "---"}</td>
+              </tr>
+
+              <tr>
+                <td className="px-2 py-2 text-gray-500 font-semibold">
+                  Favourite pizza
+                </td>
+                <td className="px-2 py-2">
+                  {" "}
+                  {userInfo?.favouritePizza ?? "---"}
+                </td>
+              </tr>
+
+              <tr>
+                <td className="px-2 py-2 text-gray-500 font-semibold">
+                  Data processing
+                </td>
+                <td className="px-2 py-2">
+                  {userInfo?.consent ? <>&#9989;</> : <>&#128308;</>}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div className="text-center my-3">
+            <NavLink
+              to="/edit-profile"
+              className="text-blue-700 italic hover:underline hover:text-indigo-600 font-medium mx-auto text-base"
+            >
+              Edit Profile
+            </NavLink>
+          </div>
+        </div>
+      </div>
+      <ToastContainer />
+    </div>
+  );
 }

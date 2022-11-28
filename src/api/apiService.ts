@@ -1,113 +1,92 @@
-import { API_URLS, JWT_TOKEN } from '../const';
-import { User } from '../shared/types';
-import { lsSave, lsRead } from '../utils';
-import { RequestOptions } from './types';
+import { API_URLS, JWT_TOKEN, localStorageKeys } from "../const";
+import { User } from "../shared/types";
+import { lsSave, lsRead } from "../utils";
+import { RequestOptions } from "./types";
 
 export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
-    return new Promise((resolve, reject) => {
-        // wrap in timeout to simulate server api call
-        setTimeout(handleRoute, 500);
+  return new Promise((resolve, reject) => {
+    // wrap in timeout to simulate server api call
+    setTimeout(handleRoute, 500);
 
-        function handleRoute() {
-            switch (url) {
-                case API_URLS.POST.LOGIN:
-                    return authenticate();
+    function handleRoute() {
+      switch (url) {
+        case API_URLS.POST.LOGIN:
+          return authenticate();
 
-                case API_URLS.GET.USER_PROFILE:
-                    return getUser();
+        case API_URLS.POST.EDIT_PROFILE:
+          return editProfile();
 
-                case API_URLS.POST.EDIT_PROFILE:
-                    return editProfile();
+        default:
+          // pass through any requests not handled above
+          return fetch(url, opts)
+            .then((response) => resolve(response))
+            .catch((error) => reject(error));
+      }
+    }
 
-                default:
-                    // pass through any requests not handled above
-                    return fetch(url, opts)
-                        .then((response) => resolve(response))
-                        .catch((error) => reject(error));
-            }
-        }
+    // route functions
+    function authenticate() {
+      const { email, password } = body();
 
-        // route functions
-        function authenticate() {
-            const { email, password } = body();
+      const dbUsers = getUsers();
 
-            const dbUsers = getUsers();
+      const user = dbUsers.find(
+        (user) => user.email === email && user.password === password
+      );
 
-            const user = dbUsers.find(
-                (user) => user.email === email && user.password === password
-            );
+      if (!user) {
+        return error(400, "Username or password is incorrect");
+      }
 
-            if (!user) {
-                return error(400, 'Username or password is incorrect');
-            }
+      return ok({
+        userInfo: { ...user },
+        token: JWT_TOKEN,
+      });
+    }
 
-            return ok({
-                userInfo: { ...user },
-                token: JWT_TOKEN,
-            });
-        }
+    function editProfile() {
+      if (!isAuthenticated()) {
+        return resolve(error(401, "Unauthorized"));
+      }
 
-        function editProfile() {
-            if (!isAuthenticated()) {
-                return resolve(error(401, 'Unauthorized'));
-            }
+      const { id, ...rest } = body();
+      const dbUsers = getUsers();
 
-            const { id, ...rest } = body();
+      const updatedUsers = dbUsers.map((user) =>
+        user.id === id ? { ...user, ...rest } : user
+      );
 
-            const dbUsers = getUsers();
+      lsSave(localStorageKeys.DB_USERS, updatedUsers);
+      const updatedUser = updatedUsers.find((user) => user.id === id);
 
-            const updatedUsers = dbUsers.map((user) =>
-                user.id === id ? { ...user, ...rest } : user
-            );
+      return ok(updatedUser);
+    }
 
-            lsSave('db_users', updatedUsers);
+    // helper functions
+    function ok<T>(body: T) {
+      resolve({
+        ok: true,
+        text: () => Promise.resolve(JSON.stringify(body)),
+      });
+    }
 
-            const updatedUser = updatedUsers.find((user) => user.id === id);
+    function error(status: number, message: string) {
+      resolve({
+        status,
+        text: () => Promise.resolve(JSON.stringify({ message })),
+      });
+    }
 
-            return ok(updatedUser);
-        }
+    function isAuthenticated(): boolean {
+      return opts?.headers["Authorization"] === `Bearer ${JWT_TOKEN}`;
+    }
 
-        function getUser() {
-            if (!isAuthenticated()) {
-                return resolve(error(401, 'Unauthorized'));
-            }
+    function body() {
+      return opts?.body && JSON.parse(opts?.body as string);
+    }
 
-            try {
-                const id = body();
-                const users = getUsers();
-                const user = users.find((user) => user.id === id);
-                return ok(user);
-            } catch (err) {
-                return resolve(error(404, 'Not found'));
-            }
-        }
-
-        // helper functions
-
-        function ok<T>(body: T) {
-            resolve({
-                ok: true,
-                text: () => Promise.resolve(JSON.stringify(body)),
-            });
-        }
-
-        function error(status: number, message: string) {
-            resolve({
-                status,
-                text: () => Promise.resolve(JSON.stringify({ message })),
-            });
-        }
-
-        function isAuthenticated(): boolean {
-            return opts?.headers['Authorization'] === `Bearer ${JWT_TOKEN}`;
-        }
-
-        function body() {
-            return opts?.body && JSON.parse(opts?.body as string);
-        }
-
-        function getUsers(): User[] | [] {
-            return lsRead('db_users', []);
-        }
-    });
+    function getUsers(): User[] | [] {
+      return lsRead(localStorageKeys.DB_USERS, []);
+    }
+  });
 }

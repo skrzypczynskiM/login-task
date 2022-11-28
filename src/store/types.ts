@@ -1,27 +1,29 @@
-import { User } from '../shared/types';
+import { SerializedError } from "@reduxjs/toolkit";
+import { User } from "../shared/types";
 
-export type Status = 'idle' | 'pending' | 'succeeded' | 'failed';
-
-export type ErrorResponse = {
-    status: number;
-    text: () => Promise<string>;
-};
+export type Status = "idle" | "pending" | "succeeded" | "failed";
 
 export type LoginRequest = {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 };
 
 export type LoginResponse = {
-    userInfo: User;
-    token: string;
+  userInfo: User;
+  token: string;
 };
 
 export type EditProfileRequest = Partial<User>;
 
+type ErrorResponse =
+  | SerializedError
+  | {
+      message: "string";
+    };
+
 export type UserState = {
-    userInfo: User | null;
-    loading: Status;
-    error: any;
-    token: string | null;
+  userInfo: User | null;
+  loading: Status;
+  error: ErrorResponse | null;
+  token: string | null;
 };

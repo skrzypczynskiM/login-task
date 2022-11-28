@@ -1,6 +1,6 @@
-import { USERS } from '../const';
-import { lsSave } from './localStorage';
+import { localStorageKeys, USERS } from "../const";
+import { lsSave } from "./localStorage";
 
 export function setupMockupData() {
-    lsSave('db_users', USERS);
+  lsSave(localStorageKeys.DB_USERS, USERS);
 }

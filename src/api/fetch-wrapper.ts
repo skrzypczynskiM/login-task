@@ -36,7 +36,6 @@ function authToken(): string | null {
 }
 
 async function handleResponse(response: Response) {
-    console.log('response: ', response);
     return await response.text().then((text) => {
         const dataFromAPi = text && JSON.parse(text);
 
