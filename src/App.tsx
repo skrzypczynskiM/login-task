@@ -9,8 +9,7 @@ import { Login } from './pages/login';
 import { Profile } from './pages/profile';
 import { EditProfile } from './pages/edit-profile';
 import { Navbar } from './components/navbar';
-
-import { history } from './utils/history';
+import { history } from './utils';
 
 function App() {
     history.navigate = useNavigate();
