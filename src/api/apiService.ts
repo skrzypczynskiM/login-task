@@ -1,11 +1,12 @@
 import { ApiUrls, users } from '../const';
 import { User } from '../store/types';
+import { lsSave, lsRead } from '../utils';
 import { RequestOptions } from './types';
 
 type Res = Promise<{ ok: boolean; text: () => Promise<string> }>;
 
 // Registered users
-localStorage.setItem('db_users', JSON.stringify(users));
+lsSave('db_users', users);
 
 type Responsee = Promise<Response> & {
     status?: number;
@@ -52,12 +53,15 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
             }
 
             return ok({
-                id: user.id,
-                fullname: user.fullname,
-                password: user.password,
-                profession: user.profession,
-                favouritePizza: user.favouritePizza,
-                consent: user.consent,
+                userInfo: {
+                    id: user.id,
+                    email: user.email,
+                    fullname: user.fullname,
+                    password: user.password,
+                    profession: user.profession,
+                    favouritePizza: user.favouritePizza,
+                    consent: user.consent,
+                },
                 token: 'fake-jwt-token',
             });
         }
@@ -75,7 +79,7 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
                 user.id === id ? { ...user, ...rest } : user
             );
 
-            localStorage.setItem('db_users', JSON.stringify(updatedUsers));
+            lsSave('db_users', updatedUsers);
 
             const updatedUser = updatedUsers.find((user) => user.id === id);
 
@@ -121,10 +125,8 @@ export function apiService(url: RequestInfo | URL, opts?: RequestOptions) {
             return opts?.body && JSON.parse(opts?.body as string);
         }
 
-        function getUsers(): User[] {
-            const dbUsers = localStorage.getItem('db_users');
-
-            return dbUsers ? JSON.parse(dbUsers) : [];
+        function getUsers(): User[] | [] {
+            return lsRead('db_users', []);
         }
     });
 }

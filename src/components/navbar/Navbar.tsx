@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
-import { usersActions } from '../../store';
+import { userActions } from '../../store';
 
 export function Navbar() {
     const dispatch = useAppDispatch();
@@ -16,7 +16,7 @@ export function Navbar() {
                 </li>
                 <li
                     className="ml-auto px-5 py-2"
-                    onClick={() => dispatch(usersActions.logout())}
+                    onClick={() => dispatch(userActions.logout())}
                 >
                     Logout
                 </li>

@@ -1,17 +1,12 @@
 import { useAppDispatch } from '../../hooks';
-import { usersActions } from '../../store';
+import { userActions } from '../../store';
+import { LoginRequest } from '../../store/types';
 
 export function Login() {
     const dispatch = useAppDispatch();
 
-    function onSubmit({
-        email,
-        password,
-    }: {
-        email: string;
-        password: string;
-    }) {
-        return dispatch(usersActions.login({ email, password }));
+    function onSubmit({ email, password }: LoginRequest) {
+        return dispatch(userActions.login({ email, password }));
     }
 
     return (

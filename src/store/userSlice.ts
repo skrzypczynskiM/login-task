@@ -1,24 +1,35 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchWrapper } from '../api/fetch-wrapper';
 import { ApiUrls } from '../const';
-import { LoginRequest, Status, User } from './types';
-import { history } from '../utils';
+import { LoginRequest, LoginResponse, Status, User } from './types';
+import { history, lsDelete, lsRead, lsSave } from '../utils';
 
-interface UserState {
-    user: User | null;
+type UserState = {
+    userInfo: User | null;
     loading: Status;
     error: any;
     token: string | null;
-}
-
-const initialState: UserState = {
-    user: null,
-    loading: 'idle',
-    error: null,
-    token: null,
 };
 
 const name = 'user';
+
+function createInitialState(): UserState {
+    const { userInfo, token } = lsRead<Pick<UserState, 'userInfo' | 'token'>>(
+        'userInfo',
+        {
+            userInfo: null,
+            token: null,
+        }
+    );
+
+    return {
+        // initialize state from local storage to enable user to stay logged in
+        userInfo,
+        token,
+        loading: 'idle',
+        error: null,
+    };
+}
 
 const getUser = createAsyncThunk(
     `${name}/getUser`,
@@ -42,11 +53,13 @@ const login = createAsyncThunk(
 
 const userSlice = createSlice({
     name,
-    initialState,
+    initialState: createInitialState(),
     reducers: {
         logout: (state) => {
-            state.user = null;
-            localStorage.removeItem('user');
+            state.userInfo = null;
+            state.token = null;
+
+            lsDelete('userInfo');
             history.navigate?.('/login');
         },
     },
@@ -54,18 +67,20 @@ const userSlice = createSlice({
         // --- login ---
         builder.addCase(
             login.fulfilled,
-            (state, action: PayloadAction<LoginRequest>) => {
-                const user = action.payload;
+            (state, action: PayloadAction<LoginResponse>) => {
+                const { token, userInfo } = action.payload;
                 state.loading = 'succeeded';
                 state.error = null;
+                state.token = token;
 
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('user', JSON.stringify(user));
-                state.user = user;
+                lsSave('userInfo', action.payload);
+
+                state.userInfo = userInfo;
 
                 // get return url from location state or default to home page
                 const { from } = history.location?.state || {
-                    from: { pathname: '/' },
+                    from: { pathname: '/profile' },
                 };
                 history.navigate?.(from);
             }
@@ -84,7 +99,7 @@ const userSlice = createSlice({
         builder.addCase(
             getUser.fulfilled,
             (state, action: PayloadAction<User>) => {
-                state.user = action.payload;
+                state.userInfo = action.payload;
                 state.loading = 'succeeded';
                 state.error = null;
             }
@@ -103,8 +118,7 @@ const userSlice = createSlice({
         builder.addCase(
             editProfile.fulfilled,
             (state, action: PayloadAction<User>) => {
-                console.log('action.payload: ', action.payload);
-                state.user = action.payload;
+                state.userInfo = action.payload;
                 state.loading = 'succeeded';
                 state.error = null;
             }
@@ -123,7 +137,7 @@ const userSlice = createSlice({
 
 export const userReducer = userSlice.reducer;
 
-export const usersActions = {
+export const userActions = {
     ...userSlice.actions,
     editProfile,
     getUser,

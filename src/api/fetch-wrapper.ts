@@ -1,4 +1,4 @@
-import { store, usersActions } from '../store';
+import { store, userActions } from '../store';
 import { apiService } from './apiService';
 import { ExtendedHeaders, HTTP_METHOD, RequestOptions } from './types';
 
@@ -42,7 +42,7 @@ function handleResponse(response: Response) {
         if (!response.ok) {
             if ([401, 403].includes(response.status) && authToken()) {
                 // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-                store.dispatch(usersActions.logout());
+                store.dispatch(userActions.logout());
             }
 
             const error =
