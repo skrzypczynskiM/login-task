@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { userActions } from "../../store";
 import { LoginRequest } from "../../store/types";
 import { loginSchema } from "../../validators";
@@ -9,6 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { Alert } from "../../components/alert";
 import { Button } from "../../components/button";
 import classNames from "classnames";
+import { showNotification } from "../../utils/showNotification";
+import { useEffect } from "react";
 
 type FormData = {
   email: string;
@@ -17,6 +19,7 @@ type FormData = {
 
 export function Login() {
   const dispatch = useAppDispatch();
+  const { error: authError } = useAppSelector((store) => store.user);
 
   const {
     register,
@@ -36,8 +39,15 @@ export function Login() {
     });
   }
 
+  useEffect(() => {
+    if (authError) {
+      showNotification("error", authError.message as string);
+    }
+  }, [authError]);
+
   return (
     <section className="h-screen ">
+      <ToastContainer />
       <div className="container px-6 py-12 h-full">
         <Alert className="w-80 fixed top-10 right-10">
           <div>
@@ -106,7 +116,6 @@ export function Login() {
           </div>
         </div>
       </div>
-      <ToastContainer />
     </section>
   );
 }

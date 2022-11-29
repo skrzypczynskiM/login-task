@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
 import { history } from "../../utils/history";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 export function Profile() {
   const { token: isAuthenticated, userInfo } = useAppSelector(
@@ -77,7 +75,6 @@ export function Profile() {
           </div>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 }

@@ -8,6 +8,8 @@ import { PizzaType, Pizza, Sex, User } from "../../shared/types";
 import { editProfileSchema } from "../../validators";
 import { Button } from "../../components/button";
 import classNames from "classnames";
+import { showNotification } from "../../utils/showNotification";
+import { ToastContainer } from "react-toastify";
 
 type FormData = {
   id: string;
@@ -21,9 +23,11 @@ type FormData = {
 };
 
 export function EditProfile() {
-  const { token: isAuthenticated, userInfo } = useAppSelector(
-    (store) => store.user
-  );
+  const {
+    token: isAuthenticated,
+    error,
+    userInfo,
+  } = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
 
   const {
@@ -48,8 +52,15 @@ export function EditProfile() {
     }
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    if (error) {
+      showNotification("error", error.message as string);
+    }
+  }, [error]);
+
   return (
     <div className="container max-w-screen-lg mx-auto mt-20">
+      <ToastContainer />
       <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
         <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
           <div className="text-gray-600 mb-7">
@@ -86,7 +97,6 @@ export function EditProfile() {
                   <label htmlFor="email">Email Address</label>
                   <input
                     {...register("email")}
-                    type="email"
                     name="email"
                     id="email"
                     placeholder="email@domain.com"

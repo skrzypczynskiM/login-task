@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchWrapper } from "../api/fetch-wrapper";
 import { API_URLS, localStorageKeys } from "../const";
 import { LoginRequest, LoginResponse, UserState } from "./types";
-import { history, lsDelete, lsRead, lsSave, showNotification } from "../utils";
+import { history, lsDelete, lsRead, lsSave } from "../utils";
 import { User } from "../shared/types";
 
 const name = "user";
@@ -74,8 +74,6 @@ const userSlice = createSlice({
     );
 
     builder.addCase(login.rejected, (state, action) => {
-      showNotification("error", action?.error?.message as string);
-
       state.loading = "failed";
       state.error = action.error;
     });
@@ -88,8 +86,6 @@ const userSlice = createSlice({
     builder.addCase(
       editProfile.fulfilled,
       (state, action: PayloadAction<User>) => {
-        showNotification("success", "Data updated successfully!");
-
         state.userInfo = action.payload;
         state.loading = "succeeded";
         state.error = null;
@@ -103,7 +99,6 @@ const userSlice = createSlice({
     );
 
     builder.addCase(editProfile.rejected, (state, action) => {
-      showNotification("error", "Something went wrong");
       state.loading = "failed";
       state.error = action.error;
     });
