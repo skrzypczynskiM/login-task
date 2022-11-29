@@ -2,15 +2,13 @@ import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
 import { history } from "../../utils/history";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export function Profile() {
-  const {
-    token: isAuthenticated,
-    userInfo,
-    loading,
-  } = useAppSelector((store) => store.user);
+  const { token: isAuthenticated, userInfo } = useAppSelector(
+    (store) => store.user
+  );
 
   useEffect(() => {
     // redirect to login page if not logged in
@@ -18,22 +16,6 @@ export function Profile() {
       history?.navigate?.("/login");
     }
   }, [isAuthenticated]);
-
-  useEffect(() => {
-    console.log("cjuk");
-    // if (loading === "succeeded") {
-    //   toast.success(" Data updated successfully!", {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "light",
-    //   });
-    // }
-  }, [loading]);
 
   return (
     <div className="max-w-xs md:min-w-[360px] mt-20">
